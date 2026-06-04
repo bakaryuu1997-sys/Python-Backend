@@ -1,0 +1,555 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+import React, { useState, useEffect } from 'react';
+import { 
+  Terminal, Zap, Feather, Database, KeyRound, Upload, FileText, Clock, 
+  Layers, CreditCard, CheckSquare, Cpu, Sparkles, BookOpen, HelpCircle, 
+  Activity, Code, Copy, Check, ExternalLink, ShieldCheck, ChevronRight, 
+  Search, ArrowRight, CornerDownRight, FileCode, Trophy
+} from 'lucide-react';
+
+import { CATEGORIES, PATTERNS, LIBRARIES } from './data';
+import { Pattern } from './types';
+import SuggestedSearch from './components/SuggestedSearch';
+import DecisionCardGrid from './components/DecisionCardGrid';
+import PatternDetailPage from './components/PatternDetailPage';
+import CodeBlock from './components/CodeBlock';
+
+// Map string icon names to Lucide icons
+function renderSidebarIcon(iconName: string, className: string) {
+  switch (iconName) {
+    case 'Terminal': return <Terminal className={className} />;
+    case 'Zap': return <Zap className={className} />;
+    case 'Feather': return <Feather className={className} />;
+    case 'Database': return <Database className={className} />;
+    case 'KeyRound': return <KeyRound className={className} />;
+    case 'Upload': return <Upload className={className} />;
+    case 'FileText': return <FileText className={className} />;
+    case 'Clock': return <Clock className={className} />;
+    case 'Layers': return <Layers className={className} />;
+    case 'CreditCard': return <CreditCard className={className} />;
+    case 'CheckSquare': return <CheckSquare className={className} />;
+    case 'Cpu': return <Cpu className={className} />;
+    case 'Sparkles': return <Sparkles className={className} />;
+    default: return <FileText className={className} />;
+  }
+}
+
+export default function App() {
+  const [activePatternId, setActivePatternId] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
+  
+  // Featured template tabs on Home Page
+  const [featuredTab, setFeaturedTab] = useState<'router' | 'service' | 'tree'>('router');
+  const [copiedFeatured, setCopiedFeatured] = useState(false);
+  const [activeNav, setActiveNav] = useState<'documentation' | 'patterns' | 'decision' | 'libraries'>('documentation');
+
+  // Find pattern by id
+  const activePattern = PATTERNS.find(p => p.id === activePatternId);
+
+  // Copier for Featured template on Homepage
+  const featuredOCRCode = PATTERNS[0].codeTemplates[0].code;
+  const featuredOCRPreprocess = PATTERNS[0].codeTemplates[1].code;
+  const featuredOCRTree = PATTERNS[0].folderStructure;
+
+  const handleCopyFeatured = async () => {
+    try {
+      const codeToCopy = featuredTab === 'router' 
+        ? featuredOCRCode 
+        : featuredTab === 'service' 
+        ? featuredOCRPreprocess 
+        : featuredOCRTree;
+      await navigator.clipboard.writeText(codeToCopy);
+      setCopiedFeatured(true);
+      setTimeout(() => setCopiedFeatured(false), 2000);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  // Safe scroll helper for navigation headers
+  const handleNavClick = (nav: 'documentation' | 'patterns' | 'decision' | 'libraries') => {
+    setActiveNav(nav);
+    setActivePatternId(null); // Return to home view
+    setCategoryFilter(null); // Reset category filter
+    
+    setTimeout(() => {
+      let targetId = '';
+      if (nav === 'patterns') targetId = 'popular_patterns_section';
+      if (nav === 'decision') targetId = 'decision_guide_section';
+      if (nav === 'libraries') targetId = 'libraries_section';
+      if (nav === 'documentation') targetId = 'search_component_root';
+
+      const el = document.getElementById(targetId);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }, 100);
+  };
+
+  // Format difficulty label in Vietnamese
+  const getVietnameseDifficulty = (diff: string) => {
+    switch (diff) {
+      case 'Easy': return 'Bản dễ';
+      case 'Medium': return 'Trung bình';
+      case 'Advanced': return 'Nâng cao';
+      default: return 'Tiêu chuẩn';
+    }
+  };
+
+  // Filter patterns for display grid based on search/sidebar filter
+  const displayedPatterns = PATTERNS.filter(pattern => {
+    const matchesCategory = categoryFilter ? pattern.category === categoryFilter : true;
+    const matchesSearch = searchQuery
+      ? pattern.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        pattern.vietnameseTitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        pattern.shortDescription.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        pattern.libraries.some(lib => lib.toLowerCase().includes(searchQuery.toLowerCase()))
+      : true;
+    return matchesCategory && matchesSearch;
+  });
+
+  return (
+    <div className="min-h-screen bg-[#0a0c10] text-slate-300 font-sans flex flex-col selection:bg-amber-500/20 selection:text-amber-300">
+      
+      {/* 1. TOP NAVIGATION BAR */}
+      <header className="sticky top-0 z-40 bg-[#0d1017]/90 backdrop-blur border-b border-slate-800/80 select-none">
+        <div className="max-w-[1600px] mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
+          
+          {/* Left: Logo brand */}
+          <div 
+            onClick={() => {
+              setActivePatternId(null);
+              setCategoryFilter(null);
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+            className="flex items-center space-x-2.5 cursor-pointer group active:scale-95 duration-150 shrink-0"
+          >
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-amber-600 to-amber-400 flex items-center justify-center shadow-lg shadow-amber-900/10 transition-transform group-hover:scale-105">
+              <span className="font-mono font-black text-slate-950 text-sm">Py</span>
+            </div>
+            <div>
+              <span className="text-sm font-black text-slate-100 tracking-tight block">
+                Python Backend Compass
+              </span>
+              <span className="text-[10px] font-mono text-amber-500/95 font-medium -mt-1 block uppercase tracking-widest">
+                Decision-First Map
+              </span>
+            </div>
+          </div>
+
+          {/* Center: Interactive Nav labels */}
+          <nav className="hidden md:flex items-center space-x-1.5 text-xs font-semibold">
+            {[
+              { id: 'documentation', label: 'Documentation' },
+              { id: 'patterns', label: 'Patterns' },
+              { id: 'decision', label: 'Decision Guide' },
+              { id: 'libraries', label: 'Libraries' }
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => handleNavClick(tab.id as any)}
+                className={`px-3.5 py-2 rounded-lg transition-all cursor-pointer ${
+                  activeNav === tab.id && !activePatternId
+                    ? 'text-amber-400 bg-amber-500/[0.06] font-bold'
+                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-850/50'
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </nav>
+
+          {/* Right: Trigger action button */}
+          <div className="flex items-center space-x-3 shrink-0">
+            <button
+              onClick={() => {
+                setActivePatternId('image-ocr-api'); // Jump straight into OCR detail template
+              }}
+              className="hidden lg:flex items-center space-x-1.5 px-3.5 py-2 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold font-mono tracking-tight cursor-pointer transition-colors active:scale-95 duration-105"
+            >
+              <Code className="w-3.5 h-3.5" />
+              <span>Copy Starter Template</span>
+            </button>
+          </div>
+
+        </div>
+      </header>
+
+      {/* 2. CORE LAYOUT WRAPPER ( sidebar left + dashboard content right ) */}
+      <div className="flex-1 max-w-[1600px] w-full mx-auto px-4 md:px-6 py-6 flex gap-6 items-start">
+        
+        {/* LEFT FIXED COLUMN SIDEBAR */}
+        <aside className="hidden md:block w-64 select-none shrink-0 sticky top-22">
+          
+          <div id="sidebar_categories_rail" className="space-y-4">
+            <div className="px-2">
+              <span className="text-[11px] font-bold font-mono text-slate-500 uppercase tracking-widest block mb-1">
+                Backend Categories
+              </span>
+              <p className="text-[10px] text-slate-550 leading-relaxed">
+                Lọc bản đồ theo chủ đề cụ thể
+              </p>
+            </div>
+
+            {/* General Filter Node */}
+            <button
+              onClick={() => {
+                setCategoryFilter(null);
+                setActivePatternId(null);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              className={`w-full text-left py-2 px-3 rounded-lg text-xs font-bold transition-all flex items-center justify-between cursor-pointer focus:outline-none ${
+                categoryFilter === null && !activePatternId
+                  ? 'bg-slate-850 text-amber-400 border border-slate-750 font-bold shadow'
+                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-850/40'
+              }`}
+            >
+              <div className="flex items-center space-x-2.5">
+                <BookOpen className="w-4 h-4 text-amber-500" />
+                <span>Show All Patterns</span>
+              </div>
+              <span className="text-[10px] font-mono bg-slate-900 border border-slate-850 text-slate-450 px-1.5 py-0.2 rounded">
+                {PATTERNS.length}
+              </span>
+            </button>
+
+            {/* List Categories */}
+            <div className="space-y-1">
+              {CATEGORIES.map((cat) => {
+                const isSelected = categoryFilter === cat.id && !activePatternId;
+                const matchesCount = PATTERNS.filter(p => p.category === cat.id).length;
+                return (
+                  <button
+                    key={cat.id}
+                    onClick={() => {
+                      setCategoryFilter(cat.id);
+                      setActivePatternId(null); // Bring back to list view
+                      setActiveNav('documentation');
+                    }}
+                    className={`w-full text-left py-2 px-3 rounded-lg text-xs font-bold transition-all flex items-center justify-between cursor-pointer group focus:outline-none ${
+                      isSelected
+                        ? 'bg-[#151c27]/90 border-l-2 shadow font-bold'
+                        : 'text-slate-300 hover:bg-slate-850/40'
+                    }`}
+                    style={{
+                      borderLeftColor: isSelected ? cat.accentHex : 'transparent',
+                      color: isSelected ? cat.accentHex : '#cbd5e1'
+                    }}
+                  >
+                    <div className="flex items-center space-x-2.5 min-w-0 pr-2" style={{ color: isSelected ? cat.accentHex : undefined }}>
+                      {renderSidebarIcon(cat.icon, `w-4 h-4 shrink-0 transition-colors ${
+                        isSelected ? '' : 'text-slate-500 group-hover:text-slate-400'
+                      }`)}
+                      <span className="truncate">{cat.name}</span>
+                    </div>
+                    {matchesCount > 0 && (
+                      <span className="text-[10px] font-mono font-medium text-slate-500">
+                        {matchesCount}
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+
+          </div>
+        </aside>
+
+        {/* RIGHT CONTENT COLUMN ( THE ACTIVE WORKSPACE DASHBOARD ) */}
+        <main className="flex-1 min-w-0">
+
+          {activePatternId && activePattern ? (
+            
+            /* SCREEN A: DETAILED PATTERN DOCUMENTATION PAGE */
+            <PatternDetailPage
+              pattern={activePattern}
+              onBack={() => setActivePatternId(null)}
+              onNavigateToPattern={(id) => setActivePatternId(id)}
+            />
+
+          ) : (
+            
+            /* SCREEN B: HOMEPAGE / DASHBOARD GRID */
+            <div className="space-y-12">
+              
+              {/* Hero & Interacting Search Box */}
+              <SuggestedSearch
+                onSelectPattern={(patternId) => setActivePatternId(patternId)}
+                onSearchQuery={(query) => setSearchQuery(query)}
+              />
+
+              {/* “Bạn muốn làm chức năng gì?” Grid block */}
+              <DecisionCardGrid
+                onSelectPattern={(patternId) => setActivePatternId(patternId)}
+              />
+
+              {/* Featured Template & Multi-Tab VSCode panel */}
+              <div className="bg-[#121620] border border-slate-800 rounded-2xl p-6 shadow-xl">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4 select-none pb-4 border-b border-slate-850">
+                  <div className="flex items-center space-x-2.5">
+                    <div className="p-2 bg-amber-500/15 rounded-lg text-amber-400">
+                      <Sparkles className="w-5 h-5 animate-pulse" />
+                    </div>
+                    <div>
+                      <h2 className="text-base font-extrabold text-slate-100 tracking-tight">
+                        Template Việt Hóa Nổi Bật: Image OCR API (PaddleOCR, PIL & OpenCV)
+                      </h2>
+                      <span className="text-[11px] font-mono text-slate-450 block mt-0.5">
+                        Thiết kế cấu trúc mã nguồn tối thiểu 3 lớp phục vụ trích xuất ký tự ảnh chụp chất lượng cao
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={handleCopyFeatured}
+                      className="px-3.5 py-2 border border-slate-750 text-slate-350 hover:text-slate-100 hover:bg-slate-850 text-xs font-mono rounded-lg transition-colors cursor-pointer flex items-center space-x-1"
+                    >
+                      {copiedFeatured ? (
+                        <>
+                          <Check className="w-3.5 h-3.5 text-emerald-400" />
+                          <span className="text-emerald-400">Copied!</span>
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="w-3.5 h-3.5" />
+                          <span>Mở rộng / Copy</span>
+                        </>
+                      )}
+                    </button>
+                    
+                    <button
+                      onClick={() => setActivePatternId('image-ocr-api')}
+                      className="px-3.5 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs rounded-lg transition-colors cursor-pointer flex items-center space-x-1"
+                    >
+                      <span>Xem Full Pattern</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Sub title files navigator tabs */}
+                <div className="flex gap-2 mb-4 overflow-x-auto scrollbar-none select-none">
+                  {[
+                    { id: 'router', name: 'app/routers/ocr_router.py', desc: 'API Router' },
+                    { id: 'service', name: 'app/services/image_preprocess.py', desc: 'OpenCV Processing' },
+                    { id: 'tree', name: 'File Structure Tree', desc: 'Cấu trúc thư mục' }
+                  ].map((tab) => (
+                    <button
+                      key={tab.id}
+                      onClick={() => setFeaturedTab(tab.id as any)}
+                      className={`text-[11px] font-mono px-3 py-1.5 rounded-lg border cursor-pointer transition-colors ${
+                        featuredTab === tab.id 
+                          ? 'bg-amber-500/10 border-amber-500/35 text-amber-400 font-semibold' 
+                          : 'border-slate-800 bg-slate-950 text-slate-450 hover:text-slate-200'
+                      }`}
+                    >
+                      {tab.name} <span className="text-[9px] text-slate-500 font-sans">({tab.desc})</span>
+                    </button>
+                  ))}
+                </div>
+
+                {/* Display highlighted sub codes */}
+                <div className="mt-2">
+                  {featuredTab === 'router' && (
+                    <CodeBlock 
+                      filename="app/routers/ocr_router.py"
+                      language="python"
+                      code={featuredOCRCode}
+                    />
+                  )}
+                  {featuredTab === 'service' && (
+                    <CodeBlock 
+                      filename="app/services/image_preprocess.py"
+                      language="python"
+                      code={featuredOCRPreprocess}
+                    />
+                  )}
+                  {featuredTab === 'tree' && (
+                    <div className="bg-[#141821] p-4 border border-slate-800 rounded-xl text-xs text-emerald-400 font-mono">
+                      <pre>{featuredOCRTree}</pre>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* "Pattern Phổ Biến" Section */}
+              <div id="popular_patterns_section" className="space-y-6">
+                <div className="flex items-center justify-between border-b border-slate-850 pb-3 select-none">
+                  <div className="flex items-center space-x-2">
+                    <BookOpen className="w-5 h-5 text-amber-500" />
+                    <h2 className="text-xl font-bold text-slate-100 tracking-tight">
+                      Bản đồ thiết kế & Pattern phổ biến
+                    </h2>
+                  </div>
+                  
+                  {categoryFilter && (
+                    <div className="flex items-center space-x-2">
+                      <span className="text-xs text-slate-400">Đang lọc theo category</span>
+                      <button
+                        onClick={() => setCategoryFilter(null)}
+                        className="px-2 py-0.5 bg-slate-800 text-slate-300 text-[10px] uppercase font-mono rounded hover:bg-slate-700 transition-colors cursor-pointer"
+                      >
+                        Reset Lọc [x]
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                {displayedPatterns.length > 0 ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {displayedPatterns.map((pattern) => (
+                      <div
+                        key={pattern.id}
+                        onClick={() => setActivePatternId(pattern.id)}
+                        className="group flex flex-col justify-between bg-[#11141b] border border-slate-800/80 hover:border-slate-700 rounded-xl p-5 hover:bg-[#151923] cursor-pointer transition-all-custom shadow relative overflow-hidden"
+                      >
+                        {/* Dynamic edge indicator */}
+                        <div className="absolute top-0 left-0 w-1.5 h-full bg-slate-700 group-hover:bg-amber-500 transition-colors" />
+
+                        <div className="pl-2">
+                          <div className="flex justify-between items-start mb-3 select-none gap-2">
+                            <span className="text-[10px] font-mono text-slate-500">
+                              {pattern.updatedAt}
+                            </span>
+                            <span className={`text-[9px] font-semibold uppercase px-1.5 py-0.2 rounded-full ${
+                              pattern.difficulty === 'Easy' ? 'bg-green-500/10 text-green-400' :
+                              pattern.difficulty === 'Medium' ? 'bg-amber-500/10 text-amber-400' :
+                              'bg-rose-500/10 text-rose-400'
+                            }`}>
+                              {pattern.difficulty} Level
+                            </span>
+                          </div>
+
+                          <h3 className="text-sm font-bold text-slate-100 group-hover:text-amber-500 leading-snug tracking-tight mb-2 transition-colors">
+                            {pattern.title}
+                          </h3>
+
+                          <p className="text-xs text-slate-450 line-clamp-2 leading-relaxed mb-4">
+                            {pattern.vietnameseTitle} — {pattern.shortDescription}
+                          </p>
+                        </div>
+
+                        <div className="pl-2 pt-3 border-t border-slate-900 flex justify-between items-center text-[10px] font-mono select-none">
+                          <div className="flex gap-1.5 flex-wrap">
+                            {pattern.libraries.slice(0, 3).map((lib, i) => (
+                              <span key={i} className="text-slate-400 font-semibold">{lib}</span>
+                            ))}
+                          </div>
+                          <span className="text-amber-500 group-hover:translate-x-0.5 duration-150 transition-transform font-sans font-semibold text-xs flex items-center space-x-0.5">
+                            <span>Sắp xếp copy </span>
+                            <span>→</span>
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="p-12 text-center text-slate-500 text-xs bg-slate-950/60 rounded-xl border border-dashed border-slate-800">
+                    Không tìm thấy pattern nào phù hợp với bộ lọc hiển thị hiện có của bạn. Hãy click vào "Show All Patterns" phía cột trái để xem tất cả.
+                  </div>
+                )}
+              </div>
+
+              {/* “Thư viện nên biết” Section */}
+              <div id="libraries_section" className="space-y-6 select-none bg-slate-950/40 border border-slate-850 p-6 rounded-2xl">
+                <div className="flex items-center space-x-2">
+                  <Cpu className="w-5 h-5 text-amber-500" />
+                  <h2 className="text-xl font-bold text-slate-100 tracking-tight">
+                    Thư viện nên biết (Python Library Guides)
+                  </h2>
+                </div>
+                
+                <p className="text-sm text-slate-400 leading-relaxed">
+                  Tổng hợp thông số các gói tệp tin thư viện lập trình backend Python kinh điển giúp bạn dọn dẹp các quyết định cài đặt nhanh hơn.
+                </p>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                  {LIBRARIES.map((lib, i) => {
+                    return (
+                      <div key={i} className="bg-[#121620] border border-slate-800 rounded-xl p-4 flex flex-col justify-between hover:border-slate-700 transition-colors">
+                        <div>
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="text-xs font-bold font-mono text-slate-100">{lib.name}</span>
+                            <span className="text-[10px] text-slate-500 bg-slate-950 border border-slate-850 px-1.5 py-0.2 rounded font-mono">
+                              {lib.relatedPatternCount} patterns
+                            </span>
+                          </div>
+                          
+                          <p className="text-xs text-slate-400 leading-relaxed mb-3 line-clamp-3">
+                            {lib.description}
+                          </p>
+
+                          <div className="mb-4">
+                            <span className="text-[10px] font-mono font-semibold text-slate-500 block uppercase tracking-wider mb-1">
+                              Khi nào dùng?
+                            </span>
+                            <p className="text-xs text-slate-350 leading-relaxed">
+                              {lib.whenToUse}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="pt-3 border-t border-slate-850 space-y-2">
+                          <code className="text-[10px] font-mono bg-slate-955 p-1.5 rounded block text-emerald-400 border border-slate-900 select-all overflow-hidden truncate">
+                            {lib.installCommand}
+                          </code>
+                          
+                          <a
+                            href={lib.websiteUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-[10px] font-mono hover:text-amber-400 text-slate-500 flex items-center space-x-1 font-semibold justify-end"
+                          >
+                            <span>Trang chủ thư viện</span>
+                            <ExternalLink className="w-3 h-3" />
+                          </a>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+            </div>
+          )}
+
+        </main>
+      </div>
+
+      {/* 3. FOOTER */}
+      <footer className="bg-[#0b0c10] border-t border-slate-900 text-slate-600 select-none py-8 mt-16 font-mono text-xs text-center">
+        <div className="max-w-[1600px] mx-auto px-4 space-y-2">
+          <p className="text-slate-500 font-semibold font-sans tracking-wide">
+            Python Backend Compass — Tập Bản Đồ Tra Cứu Tác Vụ Backend Độc Lập
+          </p>
+          <p className="text-[11px] text-slate-600 max-w-xl mx-auto leading-relaxed">
+            Hệ thống tĩnh cung cấp giải pháp, hướng dẫn công nghệ, copy code thô miễn phí được nén nhẹ chạy online-first trên trình duyệt.
+          </p>
+          <div className="pt-3 text-[10px] text-slate-700 flex justify-center items-center gap-1.5 flex-wrap">
+            <span>FastAPI 0.111+</span>
+            <span>•</span>
+            <span>Django 5.0+</span>
+            <span>•</span>
+            <span>Pytest 8.0+</span>
+            <span>•</span>
+            <span>PaddleOCR 2.7+</span>
+            <span>•</span>
+            <span>Celery 5.4+</span>
+          </div>
+        </div>
+      </footer>
+
+      {/* No active paying overlays */}
+
+    </div>
+  );
+}
+

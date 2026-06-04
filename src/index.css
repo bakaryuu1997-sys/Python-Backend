@@ -1,0 +1,53 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+/* Custom styles for our technical developer documentation theme */
+@layer base {
+  body {
+    background-color: #0d0f12; /* Rich dark graphite background */
+    color: #cbd5e1;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+/* Scrollbar Styling for premium dark feel */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0f1115;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #252b35;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3a4352;
+}
+
+/* Smooth layout transitions */
+.transition-all-custom {
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Custom Python VSCode code theme colors */
+.syntax-keyword { color: #c084fc; font-weight: 500; } /* Violet */
+.syntax-string { color: #fbbf24; }                  /* Amber */
+.syntax-function { color: #60a5fa; }                /* Blue */
+.syntax-comment { color: #64748b; font-style: italic; } /* Muted Slate */
+.syntax-class { color: #34d399; }                   /* Green */
+.syntax-import { color: #f472b6; }                  /* Pink */
+.syntax-number { color: #fb923c; }                  /* Orange */
+.syntax-decorator { color: #f43f5e; }               /* Rose */
+.syntax-text { color: #e2e8f0; }                    /* Slate Off-white */
+
