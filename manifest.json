@@ -1,0 +1,354 @@
+{
+  "project": "Python Backend Compass",
+  "version": "v3.0-release-complete-candidate",
+  "pattern_count": 215,
+  "library_guide_count": 25,
+  "architecture": "Vite + React + TypeScript static app",
+  "runtime_backend_required": false,
+  "database_required": false,
+  "gemini_or_openai_runtime_required": false,
+  "build_verified": true,
+  "commands_verified": [
+    "npm run lint",
+    "npm run build"
+  ],
+  "next_step": "Desktop Browser QA + Vercel Deploy Candidate",
+  "completed_pack": "Architecture & Distributed Systems Pack",
+  "added_patterns_in_v1_4": 23,
+  "next_pack": "Advanced Django/DRF Pack",
+  "new_pack": "Operations & Release Management Pack",
+  "static_only": true,
+  "no_backend_runtime": true,
+  "no_database_runtime": true,
+  "no_gemini_runtime": true,
+  "data_split": "src/data/pattern-packs",
+  "build": "passed",
+  "operations_pack_file": "src/data/pattern-packs/operations-release.ts",
+  "qa_status": {
+    "npm_install": "passed",
+    "npm_run_lint": "passed",
+    "npm_run_build": "passed",
+    "dev_server_localhost": "passed: HTTP 200 on http://127.0.0.1:3000",
+    "preview_server_localhost": "passed: HTTP 200 on http://127.0.0.1:4173",
+    "vite_chunk_warning": "present: main JS chunk 595.34 kB minified / 167.88 kB gzip",
+    "manual_browser_qa": "not fully executed in a real visual browser here; checklist included for user to run before production",
+    "vercel_preview_deploy": "not executed here because Vercel account/repo auth is required",
+    "vercel_production_deploy": "not executed here because Vercel account/repo auth is required"
+  },
+  "vercel": {
+    "framework": "Vite",
+    "build_command": "npm run build",
+    "output_directory": "dist",
+    "environment_variables_required": []
+  },
+  "final_predeploy": true,
+  "vercel_config_added": true,
+  "no_ai_api_runtime": true,
+  "user_action_required": [
+    "manual browser QA",
+    "push to GitHub",
+    "Vercel preview deploy",
+    "Vercel production deploy"
+  ],
+  "final_checks": {
+    "npm_install": "passed",
+    "npm_run_lint": "passed",
+    "npm_run_build": "passed",
+    "dev_server_smoke": "passed",
+    "preview_server_smoke": "passed",
+    "vite_chunk_warning": "present, not blocking preview deploy",
+    "main_js_minified_kb": 595.34,
+    "main_js_gzip_kb": 167.88
+  },
+  "performance_optimization": {
+    "compact_pattern_index": true,
+    "lazy_loaded_pattern_detail_page": true,
+    "lazy_loaded_pattern_packs": true,
+    "main_js_minified_before_kb": 595.34,
+    "main_js_minified_after_kb": 486.89,
+    "main_js_gzip_before_kb": 167.88,
+    "main_js_gzip_after_kb": 122.28,
+    "vite_chunk_warning": "removed"
+  },
+  "content_audit": "BACKEND_CONTENT_COVERAGE_AUDIT.md",
+  "qa": {
+    "version": "v2.3-qa-fixed-candidate",
+    "automated_checks": {
+      "npm_install": true,
+      "npm_run_lint": true,
+      "npm_run_build": true,
+      "dev_server_smoke": true,
+      "preview_server_smoke": true,
+      "static_data_integrity": true
+    },
+    "counts": {
+      "patterns": 161,
+      "patternIndex": 161,
+      "categories": 17,
+      "libraries": 41,
+      "decisions": 18,
+      "errors": 0,
+      "warnings": 0
+    },
+    "byCategory": {
+      "ai-rag": 23,
+      "api-basics": 9,
+      "architecture": 15,
+      "auth-security": 12,
+      "background-jobs": 8,
+      "cache-redis": 4,
+      "database": 6,
+      "deployment": 13,
+      "distributed-systems": 6,
+      "django": 16,
+      "enterprise-saas": 20,
+      "fastapi": 2,
+      "file-upload": 6,
+      "ocr-docs": 2,
+      "testing": 5,
+      "webhook-payment": 2,
+      "operations-release": 12
+    },
+    "searchResults": [
+      {
+        "query": "login JWT",
+        "expectedIds": [
+          "jwt-auth-api"
+        ],
+        "top10": [
+          "jwt-auth-api",
+          "drf-simplejwt-auth",
+          "api-key-auth",
+          "oidc-sso-integration",
+          "django-custom-user-model",
+          "pii-redaction-logging",
+          "django-drf-viewset",
+          "django-admin-model",
+          "django-testing-fixtures",
+          "django-settings-split"
+        ],
+        "passed": true
+      },
+      {
+        "query": "chụp ảnh OCR",
+        "expectedIds": [
+          "image-ocr-api"
+        ],
+        "top10": [
+          "image-ocr-api",
+          "image-upload-validation",
+          "file-validation-security",
+          "large-file-chunked-upload",
+          "secure-file-storage-access",
+          "django-file-validation-security",
+          "pii-redaction-logging",
+          "pdf-ocr-api",
+          "s3-presigned-upload",
+          "fastapi-project-structure"
+        ],
+        "passed": true
+      },
+      {
+        "query": "RAG ingestion",
+        "expectedIds": [
+          "rag-ingestion-pipeline"
+        ],
+        "top10": [
+          "hybrid-search-rag",
+          "prompt-injection-defense-rag",
+          "rag-ingestion-pipeline",
+          "rag-query-backend",
+          "multi-tenant-rag-permission-filter",
+          "prompt-template-versioning",
+          "ai-observability",
+          "pii-redaction-logging",
+          "human-approval-agent-actions",
+          "rag-evaluation-suite"
+        ],
+        "passed": true
+      },
+      {
+        "query": "Django ViewSet",
+        "expectedIds": [
+          "drf-viewset-advanced"
+        ],
+        "top10": [
+          "django-drf-viewset",
+          "drf-viewset-advanced",
+          "django-deployment-checklist",
+          "django-admin-model",
+          "django-celery-integration",
+          "django-admin-hardening",
+          "django-settings-split",
+          "django-custom-user-model",
+          "django-testing-fixtures",
+          "django-management-command"
+        ],
+        "passed": true
+      },
+      {
+        "query": "tenant isolation",
+        "expectedIds": [
+          "tenant-aware-query-filter"
+        ],
+        "top10": [
+          "row-level-security-postgres",
+          "tenant-aware-query-filter",
+          "tenant-aware-query",
+          "resource-ownership-check",
+          "advanced-rbac-tenant-roles",
+          "multi-tenant-rag-permission-filter",
+          "drf-viewset-advanced",
+          "fastapi-project-structure",
+          "feature-flag-pattern",
+          "migration-safety-checklist"
+        ],
+        "passed": true
+      },
+      {
+        "query": "release checklist",
+        "expectedIds": [
+          "release-checklist"
+        ],
+        "top10": [
+          "migration-safety-checklist",
+          "release-checklist",
+          "bundle-content-performance-checklist",
+          "browser-qa-checklist",
+          "rollback-strategy",
+          "vercel-deployment-checklist",
+          "deprecated-pattern-flag",
+          "content-freshness-workflow",
+          "static-vercel-library-architecture",
+          "feature-flag-pattern"
+        ],
+        "passed": true
+      },
+      {
+        "query": "prompt injection",
+        "expectedIds": [
+          "prompt-injection-defense-rag"
+        ],
+        "top10": [
+          "prompt-injection-defense-rag",
+          "prompt-template-versioning",
+          "human-approval-agent-actions",
+          "ai-observability",
+          "hybrid-search-rag",
+          "agent-tool-registry",
+          "security-headers-middleware",
+          "row-level-security-postgres",
+          "rag-reranking-pipeline",
+          "tool-schema-pydantic"
+        ],
+        "passed": true
+      },
+      {
+        "query": "Vercel deploy",
+        "expectedIds": [
+          "vercel-deployment-checklist"
+        ],
+        "top10": [
+          "release-checklist",
+          "migration-safety-checklist",
+          "vercel-deployment-checklist",
+          "rollback-strategy",
+          "browser-qa-checklist",
+          "feature-flag-rollout",
+          "django-deployment-checklist",
+          "feature-flag-pattern",
+          "static-vercel-library-architecture",
+          "row-level-security-postgres"
+        ],
+        "passed": true
+      }
+    ],
+    "coverage": [
+      {
+        "name": "FastAPI",
+        "present": true
+      },
+      {
+        "name": "Django/DRF",
+        "present": true
+      },
+      {
+        "name": "SQLAlchemy/Alembic",
+        "present": true
+      },
+      {
+        "name": "Auth/Security",
+        "present": true
+      },
+      {
+        "name": "OCR/Documents",
+        "present": true
+      },
+      {
+        "name": "Background jobs",
+        "present": true
+      },
+      {
+        "name": "Cache/Redis",
+        "present": true
+      },
+      {
+        "name": "Testing",
+        "present": true
+      },
+      {
+        "name": "Deployment/Vercel/Docker",
+        "present": true
+      },
+      {
+        "name": "Architecture",
+        "present": true
+      },
+      {
+        "name": "AI/RAG",
+        "present": true
+      },
+      {
+        "name": "Operations",
+        "present": true
+      }
+    ],
+    "bundle": {
+      "main_js_minified_kb": 486.9,
+      "main_js_gzip_kb": 122.27,
+      "vite_chunk_warning": false,
+      "lazy_chunks_present": true
+    },
+    "fixed_during_qa": [
+      "Fixed 10 broken relatedPattern references",
+      "Adjusted QA search expectation for actual JWT pattern id: jwt-auth-api",
+      "Regenerated compact patternIndex.ts"
+    ],
+    "manual_limitations": [
+      "No real visual Chrome/Edge click-through session in this environment",
+      "No Vercel preview URL because account/repo auth is required",
+      "No Lighthouse browser audit executed here"
+    ]
+  },
+  "fixed_during_qa": [
+    "Fixed 10 broken relatedPattern references",
+    "Adjusted QA search expectation for actual JWT pattern id: jwt-auth-api",
+    "Regenerated compact patternIndex.ts"
+  ],
+  "category_count": 23,
+  "library_count": 49,
+  "decision_count": 21,
+  "release_complete_candidate": true,
+  "qa_static": "passed",
+  "lint": "passed",
+  "dev_smoke": "passed",
+  "preview_smoke": "passed",
+  "main_js_minified_kb": 470.66,
+  "main_js_gzip_kb": 128.87,
+  "manual_steps_remaining": [
+    "browser QA",
+    "Vercel preview deploy",
+    "preview URL QA",
+    "production promote"
+  ]
+}

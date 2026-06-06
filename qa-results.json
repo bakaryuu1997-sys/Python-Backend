@@ -1,0 +1,606 @@
+{
+  "version": "v3.0-release-complete-candidate",
+  "final_qa": {
+    "patterns": 215,
+    "categories": 23,
+    "libraries": 49,
+    "decisions": 21,
+    "qa_errors": 0,
+    "qa_warnings": 0,
+    "lint": true,
+    "build": true,
+    "dev_smoke": true,
+    "preview_smoke": true,
+    "main_js_minified_kb": 470.66,
+    "main_js_gzip_kb": 128.87
+  },
+  "static_qa": {
+    "counts": {
+      "patterns": 215,
+      "patternIndex": 215,
+      "categories": 23,
+      "libraries": 49,
+      "decisions": 21,
+      "errors": 0,
+      "warnings": 0
+    },
+    "byCategory": {
+      "ai-rag": 23,
+      "api-basics": 9,
+      "architecture": 15,
+      "auth-security": 12,
+      "background-jobs": 8,
+      "cache-redis": 4,
+      "database": 6,
+      "deployment": 13,
+      "distributed-systems": 6,
+      "django": 16,
+      "enterprise-saas": 20,
+      "fastapi": 2,
+      "file-upload": 6,
+      "ocr-docs": 2,
+      "testing": 5,
+      "webhook-payment": 2,
+      "operations-release": 12,
+      "advanced-postgres": 10,
+      "fastapi-internals": 10,
+      "api-governance": 10,
+      "testing-quality": 8,
+      "devops-cloud": 8,
+      "data-engineering": 8
+    },
+    "searchResults": [
+      {
+        "query": "login JWT",
+        "expectedIds": [
+          "jwt-auth-api"
+        ],
+        "top25": [
+          "jwt-auth-api",
+          "drf-simplejwt-auth",
+          "rate-limit-login",
+          "pii-redaction-logging",
+          "log-aggregation-playbook",
+          "django-custom-user-model",
+          "audit-log-pattern",
+          "audit-log-enterprise",
+          "drf-throttling-rate-limit",
+          "fastapi-exception-hierarchy",
+          "structured-json-logging",
+          "oidc-sso-integration",
+          "fastapi-openapi-customization",
+          "static-vercel-library-architecture",
+          "api-e2e-flow-testing",
+          "secret-rotation-runbook",
+          "request-logging",
+          "mock-external-api",
+          "tenant-aware-query-filter",
+          "refresh-token-rotation",
+          "n-plus-one-avoidance",
+          "deprecated-pattern-flag",
+          "fastapi-background-lifespan-queue",
+          "fastapi-middleware-ordering",
+          "global-error-handling"
+        ],
+        "passed": true
+      },
+      {
+        "query": "chụp ảnh OCR",
+        "expectedIds": [
+          "image-ocr-api"
+        ],
+        "top25": [
+          "image-ocr-api",
+          "image-upload-validation",
+          "pdf-ocr-api",
+          "pii-redaction-logging",
+          "fastapi-project-structure",
+          "migration-safety-checklist",
+          "postgres-jsonb-patterns",
+          "django-settings-split",
+          "prompt-injection-defense-rag",
+          "provider-adapter-pattern",
+          "secure-file-storage-access",
+          "webhook-signature-verification",
+          "hexagonal-architecture-adapters",
+          "secret-rotation-runbook",
+          "field-level-encryption",
+          "rag-evaluation-suite",
+          "multi-tenant-rag-permission-filter",
+          "file-validation-security",
+          "django-custom-user-model",
+          "postgres-transaction-isolation",
+          "drf-filtering-search-ordering",
+          "postgres-deadlock-handling",
+          "sqlalchemy-session-pattern",
+          "human-approval-agent-actions",
+          "backup-restore-verification"
+        ],
+        "passed": true
+      },
+      {
+        "query": "RAG ingestion",
+        "expectedIds": [
+          "rag-ingestion-pipeline"
+        ],
+        "top25": [
+          "hybrid-search-rag",
+          "rag-ingestion-pipeline",
+          "rag-query-backend",
+          "multi-tenant-rag-permission-filter",
+          "vector-db-delete-reindex-workflow",
+          "vector-database-pgvector",
+          "rag-evaluation-suite",
+          "drf-filtering-search-ordering",
+          "citation-builder-rag",
+          "prompt-injection-defense-rag",
+          "ai-observability",
+          "pii-redaction-logging",
+          "rag-reranking-pipeline",
+          "data-retention-policy",
+          "fastapi-project-structure",
+          "llm-streaming-sse-websocket",
+          "django-admin-model",
+          "secure-file-storage-access",
+          "postgres-jsonb-patterns",
+          "soft-delete-restore-pattern",
+          "browser-qa-checklist",
+          "data-lineage-metadata",
+          "structured-json-logging",
+          "image-ocr-api",
+          "row-level-security-postgres"
+        ],
+        "passed": true
+      },
+      {
+        "query": "Django ViewSet",
+        "expectedIds": [
+          "drf-viewset-advanced"
+        ],
+        "top25": [
+          "django-drf-viewset",
+          "drf-viewset-advanced",
+          "django-deployment-checklist",
+          "django-admin-model",
+          "django-celery-integration",
+          "django-admin-hardening",
+          "django-settings-split",
+          "django-custom-user-model",
+          "django-testing-fixtures",
+          "django-management-command",
+          "django-file-validation-security",
+          "drf-simplejwt-auth",
+          "migration-safety-checklist",
+          "drf-filtering-search-ordering",
+          "fastapi-project-structure",
+          "drf-serializer-advanced",
+          "postgres-materialized-views",
+          "sqlalchemy-session-pattern",
+          "drf-permissions-policy",
+          "oidc-sso-integration",
+          "image-upload-validation",
+          "password-reset-flow",
+          "secret-rotation-runbook",
+          "drf-throttling-rate-limit",
+          "jwt-auth-api"
+        ],
+        "passed": true
+      },
+      {
+        "query": "tenant isolation",
+        "expectedIds": [
+          "tenant-aware-query-filter"
+        ],
+        "top25": [
+          "row-level-security-postgres",
+          "tenant-aware-query-filter",
+          "tenant-aware-query",
+          "resource-ownership-check",
+          "postgres-transaction-isolation",
+          "advanced-rbac-tenant-roles",
+          "analytics-tables-design",
+          "postgres-jsonb-patterns",
+          "multi-tenant-rag-permission-filter",
+          "drf-viewset-advanced",
+          "fastapi-dependency-injection-advanced",
+          "fastapi-project-structure",
+          "fastapi-security-dependencies",
+          "feature-flag-pattern",
+          "migration-safety-checklist",
+          "secure-file-storage-access",
+          "llm-cost-token-budget-guard",
+          "drf-serializer-advanced",
+          "api-error-taxonomy",
+          "data-lineage-metadata",
+          "feature-flag-rollout",
+          "django-settings-split",
+          "hybrid-search-rag",
+          "django-testing-fixtures",
+          "image-upload-validation"
+        ],
+        "passed": true
+      },
+      {
+        "query": "release checklist",
+        "expectedIds": [
+          "release-checklist"
+        ],
+        "top25": [
+          "release-checklist",
+          "rollback-strategy",
+          "compliance-checklist-soc2-lite",
+          "migration-safety-checklist",
+          "browser-qa-checklist",
+          "vercel-deployment-checklist",
+          "django-deployment-checklist",
+          "tls-ssl-checklist",
+          "bundle-content-performance-checklist",
+          "api-backward-compatible-changes",
+          "feature-flag-rollout",
+          "resource-ownership-check",
+          "sentry-error-tracking",
+          "feature-flag-pattern",
+          "consumer-driven-contract-testing",
+          "locust-load-test",
+          "cloud-run-fastapi-deploy",
+          "circuit-breaker-pattern",
+          "fastapi-exception-hierarchy",
+          "drf-filtering-search-ordering",
+          "dependency-update-workflow",
+          "api-pagination-contract",
+          "n-plus-one-avoidance",
+          "database-index-query-plan",
+          "drf-permissions-policy"
+        ],
+        "passed": true
+      },
+      {
+        "query": "prompt injection",
+        "expectedIds": [
+          "prompt-injection-defense-rag"
+        ],
+        "top25": [
+          "prompt-injection-defense-rag",
+          "prompt-template-versioning",
+          "fastapi-dependency-injection-advanced",
+          "pii-redaction-logging",
+          "postgres-jsonb-patterns",
+          "api-error-taxonomy",
+          "mock-external-api",
+          "async-sqlalchemy-engine",
+          "fastapi-crud-api",
+          "fastapi-exception-hierarchy",
+          "modular-monolith-structure",
+          "ai-observability",
+          "rollback-strategy",
+          "policy-engine-casbin-abac",
+          "transaction-unit-of-work",
+          "api-pagination-contract",
+          "admin-action-approval",
+          "api-key-auth",
+          "django-admin-hardening",
+          "docker-deploy-fastapi",
+          "domain-model-vs-orm-model",
+          "fastapi-openapi-customization",
+          "fastapi-router-versioning-governance",
+          "field-level-encryption",
+          "human-approval-agent-actions"
+        ],
+        "passed": true
+      },
+      {
+        "query": "Vercel deploy",
+        "expectedIds": [
+          "vercel-deployment-checklist"
+        ],
+        "top25": [
+          "vercel-deployment-checklist",
+          "static-vercel-library-architecture",
+          "docker-deploy-fastapi",
+          "django-deployment-checklist",
+          "blue-green-deployment",
+          "release-checklist",
+          "kubernetes-basics-fastapi",
+          "browser-qa-checklist",
+          "tenant-aware-query-filter",
+          "cloud-run-fastapi-deploy",
+          "healthcheck-endpoint",
+          "rollback-strategy",
+          "nginx-reverse-proxy",
+          "row-level-security-postgres",
+          "tls-ssl-checklist",
+          "modular-monolith-structure",
+          "alembic-migration",
+          "github-actions-ci",
+          "prometheus-metrics",
+          "structured-json-logging",
+          "api-e2e-flow-testing",
+          "cors-production-config",
+          "incident-postmortem-template",
+          "microservice-boundary-decision",
+          "settings-management"
+        ],
+        "passed": true
+      },
+      {
+        "query": "PostgreSQL isolation",
+        "expectedIds": [
+          "postgres-transaction-isolation"
+        ],
+        "top25": [
+          "postgres-transaction-isolation",
+          "row-level-security-postgres",
+          "postgres-jsonb-patterns",
+          "backup-restore-postgres",
+          "vector-database-pgvector",
+          "postgres-advisory-locks",
+          "postgres-pool-tuning",
+          "postgres-deadlock-handling",
+          "postgres-materialized-views",
+          "postgres-partial-indexes",
+          "postgres-partitioning",
+          "async-sqlalchemy-engine",
+          "analytics-tables-design",
+          "hybrid-search-rag",
+          "sqlalchemy-session-pattern",
+          "api-error-taxonomy",
+          "database-index-query-plan",
+          "docker-deploy-fastapi",
+          "static-vercel-library-architecture",
+          "testcontainers-integration",
+          "rollback-strategy",
+          "read-model-projection",
+          "resource-ownership-check",
+          "fastapi-crud-api",
+          "fastapi-middleware-ordering"
+        ],
+        "passed": true
+      },
+      {
+        "query": "FastAPI lifespan",
+        "expectedIds": [
+          "fastapi-lifespan-resources"
+        ],
+        "top25": [
+          "fastapi-lifespan-resources",
+          "fastapi-project-structure",
+          "fastapi-openapi-customization",
+          "fastapi-router-versioning-governance",
+          "docker-deploy-fastapi",
+          "fastapi-api-compatibility-policy",
+          "fastapi-crud-api",
+          "api-key-management",
+          "api-versioning-router",
+          "pytest-api-tests",
+          "fastapi-exception-hierarchy",
+          "api-rate-limit-contract",
+          "api-version-routing-strategy",
+          "sqlalchemy-session-pattern",
+          "flask-blueprint-api",
+          "fastapi-background-lifespan-queue",
+          "api-error-taxonomy",
+          "timeout-strategy",
+          "pagination-filtering-sorting",
+          "rate-limit-login",
+          "api-key-auth",
+          "api-idempotency-contract",
+          "api-backward-compatible-changes",
+          "cloud-run-fastapi-deploy",
+          "fastapi-dependency-injection-advanced"
+        ],
+        "passed": true
+      },
+      {
+        "query": "API error taxonomy",
+        "expectedIds": [
+          "api-error-taxonomy"
+        ],
+        "top25": [
+          "api-error-taxonomy",
+          "global-error-handling",
+          "fastapi-exception-hierarchy",
+          "api-rate-limit-contract",
+          "api-versioning-router",
+          "api-key-auth",
+          "fastapi-crud-api",
+          "api-backward-compatible-changes",
+          "api-sdk-generation",
+          "fastapi-openapi-customization",
+          "fastapi-router-versioning-governance",
+          "api-key-management",
+          "flask-blueprint-api",
+          "mock-external-api",
+          "openapi-customization",
+          "api-deprecation-policy",
+          "api-version-routing-strategy",
+          "fastapi-api-compatibility-policy",
+          "timeout-strategy",
+          "fastapi-middleware-ordering",
+          "pytest-api-tests",
+          "snapshot-openapi-testing",
+          "api-contract-testing",
+          "docker-deploy-fastapi",
+          "pagination-filtering-sorting"
+        ],
+        "passed": true
+      },
+      {
+        "query": "property testing",
+        "expectedIds": [
+          "property-based-testing-hypothesis"
+        ],
+        "top25": [
+          "property-based-testing-hypothesis",
+          "mutation-testing-python",
+          "api-e2e-flow-testing",
+          "pytest-api-tests",
+          "test-database-fixture",
+          "django-testing-fixtures",
+          "test-data-factory-pattern",
+          "testcontainers-integration",
+          "mock-external-api",
+          "consumer-driven-contract-testing",
+          "pii-redaction-logging",
+          "fastapi-async-testing-anyio",
+          "load-test-scenarios",
+          "locust-load-test",
+          "api-contract-testing",
+          "snapshot-openapi-testing",
+          "docker-compose-prod-like",
+          "fastapi-crud-api",
+          "fastapi-exception-hierarchy",
+          "organization-workspace-model",
+          "admin-action-approval",
+          "clean-architecture-light",
+          "field-level-encryption",
+          "human-approval-agent-actions",
+          "plan-limit-enforcement"
+        ],
+        "passed": true
+      },
+      {
+        "query": "Docker Compose",
+        "expectedIds": [
+          "docker-compose-prod-like"
+        ],
+        "top25": [
+          "docker-compose-prod-like",
+          "docker-deploy-fastapi",
+          "cqrs-basic-pattern",
+          "postgres-query-plan-playbook",
+          "analytics-tables-design",
+          "security-incident-response",
+          "bulkhead-pattern",
+          "incident-postmortem-template",
+          "postgres-read-replicas",
+          "postgres-deadlock-handling",
+          "timeout-strategy",
+          "prompt-injection-defense-rag",
+          "testcontainers-integration",
+          "secret-rotation-runbook",
+          "django-admin-hardening",
+          "csv-import-validation",
+          "api-deprecation-policy",
+          "redis-cache-aside",
+          "healthcheck-endpoint",
+          "distributed-lock-redis",
+          "fastapi-security-dependencies",
+          "security-headers-middleware",
+          "django-admin-model",
+          "django-celery-integration",
+          "api-versioning-router"
+        ],
+        "passed": true
+      },
+      {
+        "query": "ETL job",
+        "expectedIds": [
+          "etl-job-structure"
+        ],
+        "top25": [
+          "etl-job-structure",
+          "sse-job-progress",
+          "excel-export-background",
+          "job-status-api",
+          "postgres-advisory-locks",
+          "scheduled-cleanup-job",
+          "data-reconciliation-job",
+          "data-lineage-metadata",
+          "pdf-ocr-api",
+          "rag-ingestion-pipeline",
+          "analytics-tables-design",
+          "api-idempotency-contract",
+          "distributed-lock-redis",
+          "fastapi-project-structure",
+          "data-retention-policy",
+          "celery-worker-setup",
+          "fastapi-backgroundtasks",
+          "export-excel-pdf",
+          "django-celery-integration",
+          "read-model-projection",
+          "plan-limit-enforcement",
+          "csv-excel-import",
+          "email-sending",
+          "email-template-jinja"
+        ],
+        "passed": true
+      }
+    ],
+    "coverage": [
+      {
+        "name": "FastAPI",
+        "present": true
+      },
+      {
+        "name": "Django/DRF",
+        "present": true
+      },
+      {
+        "name": "SQLAlchemy/Alembic",
+        "present": true
+      },
+      {
+        "name": "Auth/Security",
+        "present": true
+      },
+      {
+        "name": "OCR/Documents",
+        "present": true
+      },
+      {
+        "name": "Background jobs",
+        "present": true
+      },
+      {
+        "name": "Cache/Redis",
+        "present": true
+      },
+      {
+        "name": "Testing",
+        "present": true
+      },
+      {
+        "name": "Deployment/Vercel/Docker",
+        "present": true
+      },
+      {
+        "name": "Architecture",
+        "present": true
+      },
+      {
+        "name": "AI/RAG",
+        "present": true
+      },
+      {
+        "name": "Operations",
+        "present": true
+      },
+      {
+        "name": "Advanced PostgreSQL",
+        "present": true
+      },
+      {
+        "name": "Advanced FastAPI",
+        "present": true
+      },
+      {
+        "name": "API Governance",
+        "present": true
+      },
+      {
+        "name": "Testing Quality",
+        "present": true
+      },
+      {
+        "name": "DevOps Cloud",
+        "present": true
+      },
+      {
+        "name": "Data Engineering",
+        "present": true
+      }
+    ],
+    "errors": [],
+    "warnings": []
+  }
+}

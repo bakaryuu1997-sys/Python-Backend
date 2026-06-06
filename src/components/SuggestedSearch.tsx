@@ -4,22 +4,31 @@
  */
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, X, CheckSquare, ShieldCheck, Zap, CornerDownRight } from 'lucide-react';
-import { Pattern } from '../types';
-import { PATTERNS, SUGGESTED_SEARCH_CHIPS, CATEGORIES } from '../data';
+import { Search, X, ShieldCheck, Zap, CornerDownRight, Sparkles, RotateCcw } from 'lucide-react';
+import { SearchResult } from '../types';
+import { PATTERN_INDEX, SUGGESTED_SEARCH_CHIPS, CATEGORIES } from '../data/index';
+import { searchPatterns, formatMatchedFields, highlightText } from '../lib/search';
 
 interface SuggestedSearchProps {
   onSelectPattern: (patternId: string) => void;
   onSearchQuery: (query: string) => void;
 }
 
+function HighlightedText({ text, query, className }: { text: string; query: string; className?: string }) {
+  return (
+    <span
+      className={className}
+      dangerouslySetInnerHTML={{ __html: highlightText(text, query) }}
+    />
+  );
+}
+
 export default function SuggestedSearch({ onSelectPattern, onSearchQuery }: SuggestedSearchProps) {
   const [searchInput, setSearchInput] = useState('');
   const [showDropdown, setShowDropdown] = useState(false);
-  const [filteredPatterns, setFilteredPatterns] = useState<Pattern[]>([]);
+  const [filteredResults, setFilteredResults] = useState<SearchResult[]>([]);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Close dropdown on click outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -30,27 +39,15 @@ export default function SuggestedSearch({ onSelectPattern, onSearchQuery }: Sugg
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Filter patterns based on search input
   useEffect(() => {
     if (!searchInput.trim()) {
-      // By default show featured patterns as recommendations in autocomplete
-      setFilteredPatterns(PATTERNS.slice(0, 4));
+      setFilteredResults(searchPatterns(PATTERN_INDEX, '').slice(0, 6));
+      onSearchQuery('');
       return;
     }
 
-    const query = searchInput.toLowerCase();
-    const matches = PATTERNS.filter(pattern => {
-      // Match title, library names, description, or category
-      return (
-        pattern.title.toLowerCase().includes(query) ||
-        pattern.vietnameseTitle.toLowerCase().includes(query) ||
-        pattern.shortDescription.toLowerCase().includes(query) ||
-        pattern.libraries.some(lib => lib.toLowerCase().includes(query)) ||
-        pattern.id.toLowerCase().includes(query)
-      );
-    });
-
-    setFilteredPatterns(matches);
+    const matches = searchPatterns(PATTERN_INDEX, searchInput).slice(0, 8);
+    setFilteredResults(matches);
     onSearchQuery(searchInput);
   }, [searchInput, onSearchQuery]);
 
@@ -61,34 +58,38 @@ export default function SuggestedSearch({ onSelectPattern, onSearchQuery }: Sugg
 
   const handleClear = () => {
     setSearchInput('');
+    setShowDropdown(true);
     onSearchQuery('');
   };
 
   const getDiffStyle = (diff: string) => {
     switch (diff) {
-      case 'Easy': return 'bg-green-500/15 text-green-400 text-[10px] border border-green-500/20';
-      case 'Medium': return 'bg-amber-500/15 text-amber-400 text-[10px] border border-amber-500/20';
-      case 'Advanced': return 'bg-rose-500/15 text-rose-400 text-[10px] border border-rose-500/20';
-      default: return 'bg-slate-500/15 text-slate-400 text-[10px] border border-slate-550';
+      case 'Easy': return 'bg-green-500/15 text-green-300 text-[10px] border border-green-500/20';
+      case 'Medium': return 'bg-amber-500/15 text-amber-300 text-[10px] border border-amber-500/20';
+      case 'Advanced': return 'bg-rose-500/15 text-rose-300 text-[10px] border border-rose-500/20';
+      default: return 'bg-slate-500/15 text-slate-300 text-[10px] border border-slate-600';
     }
   };
 
   return (
-    <div id="search_component_root" className="w-full bg-[#11141b] border border-slate-800 rounded-2xl p-6 md:p-8 shadow-xl max-w-4xl mx-auto mb-10 text-center relative select-none">
-      {/* Search Header */}
-      <div className="mb-6">
-        <h1 className="text-xl md:text-2xl font-bold text-slate-100 mb-2 leading-tight">
+    <div id="search_component_root" className="w-full bg-[#111722] border border-slate-700/80 rounded-2xl p-7 md:p-9 shadow-xl max-w-5xl mx-auto mb-12 text-center relative select-none">
+      <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-amber-500/[0.035] via-transparent to-violet-500/[0.025] pointer-events-none" />
+      <div className="relative mb-7">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-amber-500/20 bg-amber-500/10 text-amber-300 text-[11px] font-mono font-semibold mb-4">
+          <Sparkles className="w-3.5 h-3.5" />
+          Static Decision Library · No Backend · No Gemini Runtime
+        </div>
+        <h1 className="text-2xl md:text-3xl font-extrabold text-slate-50 mb-3 leading-tight tracking-tight">
           Tra cứu Backend Python nhanh, đúng thư viện, có template copy ngay
         </h1>
-        <p className="text-sm text-slate-400 leading-relaxed max-w-2xl mx-auto">
-          Tìm pattern backend, chọn đúng thư viện, xem khi nào dùng và copy template production-ready cho FastAPI, Django, SQLAlchemy, Redis, Celery, OCR, RAG.
+        <p className="text-[15px] text-slate-300 leading-7 max-w-3xl mx-auto">
+          Tìm pattern backend, chọn đúng thư viện, xem <strong className="text-slate-100">khi nào dùng</strong> và copy template production-ready cho FastAPI, Django, SQLAlchemy, Redis, Celery, OCR, RAG.
         </p>
       </div>
 
-      {/* Input container with autocomplete wrapper */}
-      <div className="relative max-w-3xl mx-auto" ref={dropdownRef}>
+      <div className="relative max-w-4xl mx-auto" ref={dropdownRef}>
         <div className="relative">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-amber-400" />
           <input
             type="text"
             value={searchInput}
@@ -98,31 +99,30 @@ export default function SuggestedSearch({ onSelectPattern, onSearchQuery }: Sugg
             }}
             onFocus={() => setShowDropdown(true)}
             placeholder="Tìm: chụp ảnh OCR, login JWT, upload file lớn, Redis cache, Celery, RAG backend..."
-            className="w-full bg-[#161a23] border border-slate-700 focus:border-amber-500 rounded-xl pl-12 pr-10 py-3.5 text-sm text-slate-100 placeholder-slate-500 focus:outline-none transition-all duration-250 shadow-inner"
+            className="w-full bg-[#171d29] border border-slate-600 focus:border-amber-400 focus:ring-4 focus:ring-amber-500/10 rounded-xl pl-12 pr-11 py-4 text-[15px] text-slate-50 placeholder-slate-400 focus:outline-none transition-all duration-200 shadow-inner"
           />
           {searchInput && (
             <button
               onClick={handleClear}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-450 hover:text-slate-200 cursor-pointer"
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-100 cursor-pointer"
+              aria-label="Clear search"
             >
               <X className="w-4 h-4" />
             </button>
           )}
         </div>
 
-        {/* Autocomplete Dropdown Preview */}
         {showDropdown && (
-          <div className="absolute top-full left-0 w-full mt-2 bg-[#161a24] border border-slate-750 rounded-xl shadow-2xl z-50 text-left overflow-hidden transition-all duration-200">
-            {/* Dropdown Header Label */}
-            <div className="bg-[#12151e] px-4 py-2 text-[10px] font-semibold text-slate-500 uppercase tracking-wider flex justify-between items-center select-none border-b border-slate-800">
+          <div className="absolute top-full left-0 w-full mt-3 bg-[#151b27] border border-slate-700 rounded-xl shadow-2xl z-50 text-left overflow-hidden transition-all duration-200">
+            <div className="bg-[#111722] px-4 py-2.5 text-[10px] font-semibold text-slate-400 uppercase tracking-wider flex justify-between items-center select-none border-b border-slate-800">
               <span>{searchInput.trim() ? 'Kết quả gợi ý khớp' : 'Gợi ý nổi bật nhất'}</span>
-              <span>{filteredPatterns.length} items</span>
+              <span>{filteredResults.length} items</span>
             </div>
 
-            {/* Results list */}
-            {filteredPatterns.length > 0 ? (
-              <div className="max-h-[380px] overflow-y-auto divide-y divide-slate-800 scrollbar-thin">
-                {filteredPatterns.map((pattern) => {
+            {filteredResults.length > 0 ? (
+              <div className="max-h-[420px] overflow-y-auto divide-y divide-slate-800 scrollbar-thin">
+                {filteredResults.map((result) => {
+                  const pattern = result.pattern;
                   const cat = CATEGORIES.find(c => c.id === pattern.category);
                   return (
                     <div
@@ -131,80 +131,92 @@ export default function SuggestedSearch({ onSelectPattern, onSearchQuery }: Sugg
                         onSelectPattern(pattern.id);
                         setShowDropdown(false);
                       }}
-                      className="p-3.5 hover:bg-[#1d2331] cursor-pointer transition-colors duration-150 flex items-start gap-3"
+                      className="p-4 hover:bg-[#202838] cursor-pointer transition-colors duration-150 flex items-start gap-3"
                     >
-                      <div className="p-1 rounded bg-[#0f1118] shrink-0 text-amber-500 mt-0.5">
+                      <div className="p-1.5 rounded-lg bg-[#0f131b] shrink-0 text-amber-400 mt-0.5 border border-slate-800">
                         <Zap className="w-3.5 h-3.5" />
                       </div>
-                      
+
                       <div className="flex-1 min-w-0">
-                        {/* Title and Badge line */}
-                        <div className="flex flex-wrap items-center gap-2 mb-1">
-                          <span className="text-xs font-semibold text-slate-100 line-clamp-1">
-                            {pattern.title}
-                          </span>
-                          
-                          {/* Category badge */}
+                        <div className="flex flex-wrap items-center gap-2 mb-1.5">
+                          <HighlightedText
+                            text={pattern.title}
+                            query={searchInput}
+                            className="text-[13px] font-bold text-slate-50 line-clamp-1 search-highlight-text"
+                          />
                           {cat && (
                             <span
-                              className="text-[9px] px-1.5 py-0.2 rounded font-medium"
-                              style={{ backgroundColor: `${cat.accentHex}15`, color: cat.accentHex, border: `1px solid ${cat.accentHex}20` }}
+                              className="text-[9px] px-1.5 py-0.5 rounded font-semibold border"
+                              style={{ backgroundColor: `${cat.accentHex}18`, color: cat.accentHex, borderColor: `${cat.accentHex}35` }}
                             >
                               {cat.name}
                             </span>
                           )}
-
-                          <span className={`px-1.5 py-0.2 rounded font-mono ${getDiffStyle(pattern.difficulty)}`}>
+                          <span className={`px-1.5 py-0.5 rounded font-mono ${getDiffStyle(pattern.difficulty)}`}>
                             {pattern.difficulty}
                           </span>
                         </div>
 
-                        {/* Vietnamese Details Description */}
-                        <p className="text-[11px] text-slate-400 line-clamp-1 mb-1.5">
-                          {pattern.vietnameseTitle} - {pattern.shortDescription}
+                        <p className="text-xs text-slate-300 line-clamp-2 mb-2 leading-5">
+                          <HighlightedText text={`${pattern.vietnameseTitle} — ${pattern.shortDescription}`} query={searchInput} className="search-highlight-text" />
                         </p>
 
-                        {/* Tech recommendation row */}
+                        <div className="mb-2 inline-flex items-center gap-1.5 rounded-md border border-amber-500/15 bg-amber-500/[0.06] px-2 py-1 text-[10px] text-amber-300 font-mono">
+                          <CornerDownRight className="w-3 h-3" />
+                          <span>Matched by: {formatMatchedFields(result.matchedFields)}</span>
+                        </div>
+
                         <div className="flex items-center gap-1.5 flex-wrap">
-                          <span className="text-[10px] text-slate-500 flex items-center">
-                            <CornerDownRight className="w-2.5 h-2.5 mr-1" /> Thư viện khuyên dùng:
+                          <span className="text-[10px] text-slate-400 flex items-center">
+                            Thư viện:
                           </span>
-                          {pattern.libraries.map((lib, idx) => (
-                            <span key={idx} className="text-[9px] font-mono px-1 rounded bg-slate-900 border border-slate-850 text-slate-300">
+                          {pattern.libraries.slice(0, 6).map((lib, idx) => (
+                            <span key={idx} className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-slate-950 border border-slate-800 text-slate-300">
                               {lib}
                             </span>
                           ))}
                         </div>
                       </div>
 
-                      {/* Right Indicator */}
-                      <div className="shrink-0 text-[10px] text-slate-500 font-mono text-right flex flex-col items-end gap-1 select-none">
-                        <span className="text-emerald-500 flex items-center gap-0.5">
+                      <div className="shrink-0 text-[10px] text-slate-400 font-mono text-right flex flex-col items-end gap-1 select-none">
+                        <span className="text-emerald-400 flex items-center gap-0.5">
                           <ShieldCheck className="w-3 h-3" /> Ready
                         </span>
-                        <span>{pattern.updatedAt.split(' ').slice(-3).join(' ')}</span>
+                        <span>{pattern.updatedAt}</span>
                       </div>
                     </div>
                   );
                 })}
               </div>
             ) : (
-              <div className="p-6 text-center text-slate-500 text-xs">
-                Không tìm thấy pattern nào khớp với từ khóa "{searchInput}". Thử tìm kiếm từ khác!
+              <div className="p-7 text-center">
+                <div className="mx-auto mb-3 w-10 h-10 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400">
+                  <Search className="w-5 h-5" />
+                </div>
+                <h3 className="text-sm font-bold text-slate-100 mb-1">Chưa tìm thấy pattern phù hợp</h3>
+                <p className="text-xs text-slate-400 leading-5 max-w-md mx-auto mb-4">
+                  Thử dùng từ khóa gần nghĩa như “OCR”, “đăng nhập”, “file lớn”, “worker”, “cache”, “webhook”, hoặc chọn một gợi ý bên dưới.
+                </p>
+                <div className="flex flex-wrap justify-center gap-2">
+                  {['chụp ảnh OCR', 'login JWT', 'file lớn Celery', 'Redis cache', 'RAG backend'].map((chip) => (
+                    <button key={chip} onClick={() => handleChipClick(chip)} className="px-2.5 py-1 rounded-md bg-slate-800 hover:bg-slate-700 text-slate-200 text-[11px] border border-slate-700">
+                      <RotateCcw className="inline w-3 h-3 mr-1" /> {chip}
+                    </button>
+                  ))}
+                </div>
               </div>
             )}
           </div>
         )}
       </div>
 
-      {/* Suggested Search Chips */}
-      <div className="mt-5 flex items-center justify-center flex-wrap gap-2 text-xs">
-        <span className="text-slate-500 font-medium select-none">Từ khóa gợi ý:</span>
+      <div className="mt-5 flex items-center justify-center flex-wrap gap-2 text-xs relative">
+        <span className="text-slate-400 font-medium select-none">Từ khóa gợi ý:</span>
         {SUGGESTED_SEARCH_CHIPS.map((chip, index) => (
           <button
             key={index}
             onClick={() => handleChipClick(chip)}
-            className="px-2.5 py-1 rounded-md text-[11px] bg-slate-800/60 border border-slate-750 hover:border-slate-650 hover:bg-slate-800 text-slate-350 hover:text-slate-100 transition-all duration-150 active:scale-95 cursor-pointer"
+            className="px-2.5 py-1.5 rounded-md text-[11px] bg-slate-800/70 border border-slate-700 hover:border-amber-500/40 hover:bg-slate-800 text-slate-200 hover:text-amber-200 transition-all duration-150 active:scale-95 cursor-pointer"
           >
             {chip}
           </button>

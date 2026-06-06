@@ -1,15 +1,10 @@
-/**
- * @license
- * SPDX-License-Identifier: Apache-2.0
- */
-
 export interface Category {
   id: string;
   name: string;
-  icon: string; // Name of Lucide-react icon
-  accentColor: string; // e.g. text-amber-500, bg-amber-500/10
-  borderColor: string; // border-amber-500/30
-  accentHex: string; // #f59e0b
+  icon: string;
+  accentColor: string;
+  borderColor: string;
+  accentHex: string;
   description: string;
 }
 
@@ -19,16 +14,19 @@ export interface DecisionCard {
   khiNaoDung: string[];
   stack: string[];
   ctaText: string;
-  categoryAccent: string; // e.g. 'violet', 'rose'
-  patternId: string; // Navigates to this pattern
+  categoryAccent: string;
+  patternId: string;
   patternCountLabel: string;
 }
+
+export type TemplateVariant = 'minimal' | 'production' | 'test' | 'config';
 
 export interface CodeTemplate {
   filename: string;
   language: string;
   code: string;
   description: string;
+  variant?: TemplateVariant;
 }
 
 export interface CommonError {
@@ -48,30 +46,27 @@ export interface Pattern {
   title: string;
   vietnameseTitle: string;
   shortDescription: string;
-  category: string; // matches Category.id
-  difficulty: "Easy" | "Medium" | "Advanced";
-  difficultyVi: "Dễ" | "Trung bình" | "Nâng cao";
+  category: string;
+  difficulty: 'Easy' | 'Medium' | 'Advanced';
+  difficultyVi: 'Dễ' | 'Trung bình' | 'Nâng cao';
   productionLevel: string;
   libraries: string[];
   updatedAt: string;
-  
-  // Decision guidelines (Shown ABOVE code blocks)
-  whyUse: string[]; // Khi nào dùng
-  whyNotUse: string[]; // Khi nào không dùng
-  
+  whyUse: string[];
+  whyNotUse: string[];
   quickDecision: {
     bestFor: string[];
     avoidWhen: string[];
     productionLevel: string;
   };
-  
   installCommand: string;
-  requestFlow: string[]; // Flow step descriptions
-  folderStructure: string; // Text representation of folder tree
+  requestFlow: string[];
+  folderStructure: string;
   codeTemplates: CodeTemplate[];
   commonErrors: CommonError[];
   productionChecklist: ChecklistItem[];
-  relatedPatterns: string[]; // pattern ids
+  relatedPatterns: string[];
+  searchKeywords?: string[];
 }
 
 export interface LibraryGuide {
@@ -84,3 +79,12 @@ export interface LibraryGuide {
   installCommand: string;
   websiteUrl: string;
 }
+
+export interface SearchResult {
+  pattern: Pattern;
+  score: number;
+  matchedFields: string[];
+  matchedTerms: string[];
+}
+
+export type PatternSummary = Pattern;

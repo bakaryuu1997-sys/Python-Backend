@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { DecisionCard } from '../types';
-import { DECISION_CARDS } from '../data';
+import { DECISION_CARDS } from '../data/index';
 import { ArrowUpRight, CheckCircle2, ChevronRight, Layers } from 'lucide-react';
 
 interface DecisionCardGridProps {

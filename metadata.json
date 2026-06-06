@@ -1,6 +1,8 @@
 {
   "name": "Python Backend Compass",
-  "description": "Bản đồ tra cứu backend Python, chọn đúng thư viện, xem khi nào dùng và sao chép template code duy nhất cho FastAPI, Django, Celery, Redis và các thư viện phổ biến.",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "description": "Static-first Python backend decision and template library for Vercel deployment.",
+  "deployment": "static-vite-react-vercel",
+  "requiresBackend": false,
+  "requiresDatabase": false,
+  "requiresAIKey": false
 }

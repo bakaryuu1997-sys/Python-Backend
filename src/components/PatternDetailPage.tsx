@@ -5,21 +5,30 @@
 
 import React, { useState, useEffect } from 'react';
 import { Pattern } from '../types';
-import { CATEGORIES, PATTERNS } from '../data';
+import { CATEGORIES, PATTERN_INDEX } from '../data/index';
 import CodeBlock from './CodeBlock';
 import { 
   ArrowLeft, Check, Copy, CheckSquare, Info, ShieldAlert, Play, 
   CornerDownRight, RefreshCw, FileCode, CheckCircle2, AlertTriangle, 
-  ExternalLink, ArrowRight, Zap, Code, Package, Terminal, FileText, ClipboardList
+  ExternalLink, ArrowRight, Zap, Code, Package, Terminal, FileText, ClipboardList,
+  Star
 } from 'lucide-react';
 
 interface PatternDetailPageProps {
   pattern: Pattern;
   onBack: () => void;
   onNavigateToPattern: (id: string) => void;
+  isBookmarked: boolean;
+  onToggleBookmark: (id: string) => void;
 }
 
-export default function PatternDetailPage({ pattern, onBack, onNavigateToPattern }: PatternDetailPageProps) {
+export default function PatternDetailPage({ 
+  pattern, 
+  onBack, 
+  onNavigateToPattern,
+  isBookmarked,
+  onToggleBookmark
+}: PatternDetailPageProps) {
   const [activeTabIdx, setActiveTabIdx] = useState(0);
   const [copiedInstall, setCopiedInstall] = useState(false);
   const [copiedStructure, setCopiedStructure] = useState(false);
@@ -126,14 +135,22 @@ export default function PatternDetailPage({ pattern, onBack, onNavigateToPattern
   return (
     <div className="w-full animate-in fade-in duration-300">
       
-      {/* Back to Home Navigator button */}
-      <div className="mb-6">
+      {/* Back to Home Navigator button & Bookmark toggle */}
+      <div className="mb-6 flex justify-between items-center select-none">
         <button
           onClick={onBack}
           className="inline-flex items-center space-x-2 text-xs font-semibold text-amber-500 hover:text-amber-400 font-mono tracking-tight cursor-pointer py-1.5 focus:outline-none"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>QUAY LẠI DANH SÁCH BẢN ĐỒ</span>
+        </button>
+
+        <button
+          onClick={() => onToggleBookmark(pattern.id)}
+          className="inline-flex items-center space-x-1.5 px-3.5 py-1.5 rounded-lg border border-slate-800 bg-[#121620] hover:bg-[#161a25] text-xs font-semibold text-slate-300 hover:text-amber-400 transition-colors cursor-pointer focus:outline-none"
+        >
+          <Star className={`w-3.5 h-3.5 ${isBookmarked ? 'fill-amber-400 text-amber-400' : 'text-slate-500'}`} />
+          <span>{isBookmarked ? 'Đã lưu (Bookmarked)' : 'Lưu mẫu này'}</span>
         </button>
       </div>
 
@@ -158,7 +175,7 @@ export default function PatternDetailPage({ pattern, onBack, onNavigateToPattern
           {pattern.title}
         </h1>
         
-        <p className="text-base text-slate-350 leading-relaxed max-w-4xl">
+        <p className="text-[16px] text-slate-300 leading-7 max-w-4xl">
           {pattern.shortDescription}
         </p>
       </div>
@@ -219,7 +236,7 @@ export default function PatternDetailPage({ pattern, onBack, onNavigateToPattern
                 <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-widest block mb-1">
                   Xài tốt nhất khi (Best for):
                 </span>
-                <ul className="space-y-1 text-xs text-slate-300">
+                <ul className="space-y-2 text-[13px] text-slate-200 leading-6">
                   {pattern.quickDecision.bestFor.map((item, i) => (
                     <li key={i} className="flex items-start">
                       <span className="text-emerald-400 font-bold mr-1.5">✓</span>
@@ -233,7 +250,7 @@ export default function PatternDetailPage({ pattern, onBack, onNavigateToPattern
                 <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-widest block mb-1">
                   Né tránh khi (Avoid when):
                 </span>
-                <ul className="space-y-1 text-xs text-slate-300">
+                <ul className="space-y-2 text-[13px] text-slate-200 leading-6">
                   {pattern.quickDecision.avoidWhen.map((item, i) => (
                     <li key={i} className="flex items-start">
                       <span className="text-rose-400 font-bold mr-1.5">✗</span>
@@ -259,7 +276,7 @@ export default function PatternDetailPage({ pattern, onBack, onNavigateToPattern
                 <CheckCircle2 className="w-4.5 h-4.5" />
                 <span>KHI NÀO NÊN DÙNG?</span>
               </h3>
-              <ul className="space-y-2 text-xs text-slate-300 leading-relaxed">
+              <ul className="space-y-2.5 text-[13px] text-slate-200 leading-6">
                 {pattern.whyUse.map((item, idx) => (
                   <li key={idx} className="flex items-start gap-2.5">
                     <span className="text-emerald-500 font-bold shrink-0 mt-0.5">•</span>
@@ -275,7 +292,7 @@ export default function PatternDetailPage({ pattern, onBack, onNavigateToPattern
                 <AlertTriangle className="w-4.5 h-4.5" />
                 <span>KHI NÀO KHÔNG NÊN DÙNG?</span>
               </h3>
-              <ul className="space-y-2 text-xs text-slate-300 leading-relaxed">
+              <ul className="space-y-2.5 text-[13px] text-slate-200 leading-6">
                 {pattern.whyNotUse.map((item, idx) => (
                   <li key={idx} className="flex items-start gap-2.5">
                     <span className="text-rose-500 font-bold shrink-0 mt-0.5">•</span>
@@ -365,7 +382,7 @@ export default function PatternDetailPage({ pattern, onBack, onNavigateToPattern
                         {phaseName}
                       </h4>
                       {phaseDetail && (
-                        <p className="text-xs text-slate-400 leading-relaxed mt-0.5">
+                        <p className="text-[13px] text-slate-300 leading-6 mt-1">
                           {phaseDetail}
                         </p>
                       )}
@@ -447,6 +464,11 @@ export default function PatternDetailPage({ pattern, onBack, onNavigateToPattern
                 >
                   <FileText className="w-3.5 h-3.5 shrink-0" />
                   <span>{template.filename.split('/').pop()}</span>
+                  {template.variant && (
+                    <span className="text-[9px] uppercase rounded bg-slate-900 border border-slate-700 px-1.5 py-0.5 text-slate-300">
+                      {template.variant}
+                    </span>
+                  )}
                 </button>
               ))}
             </div>
@@ -549,11 +571,11 @@ export default function PatternDetailPage({ pattern, onBack, onNavigateToPattern
           {/* Related Patterns list section */}
           <div id="related-patterns" className="py-4 border-t border-slate-800">
             <h3 className="text-sm font-bold text-slate-400 flex items-center space-x-2 font-mono tracking-wider select-none mb-4">
-              <span>BẢN ĐỒ LIÊN QUAN (RELATED PATTERNS)</span>
+              <span>BẢN ĐỒ LIÊN QUAN (RELATED PATTERN_INDEX)</span>
             </h3>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {PATTERNS.filter(p => pattern.relatedPatterns.includes(p.id)).map((relPattern) => (
+              {PATTERN_INDEX.filter(p => pattern.relatedPatterns.includes(p.id)).map((relPattern) => (
                 <div
                   key={relPattern.id}
                   onClick={() => onNavigateToPattern(relPattern.id)}
@@ -602,11 +624,11 @@ export default function PatternDetailPage({ pattern, onBack, onNavigateToPattern
               </button>
 
               <button
-                onClick={() => alert(`ZIP Archive containing template applet ${pattern.id} ready! (Simulated Download in AI Studio)`)}
-                className="w-full py-2 px-4 border border-slate-750 text-slate-400 hover:text-slate-200 text-xs rounded-lg cursor-pointer flex items-center justify-center space-x-1.5 transition-all bg-[#141821]/50"
+                onClick={handleCopyStructure}
+                className="w-full py-2 px-4 border border-slate-750 text-slate-300 hover:text-slate-100 hover:bg-slate-800 text-xs rounded-lg cursor-pointer flex items-center justify-center space-x-1.5 transition-all bg-[#141821]/50"
               >
                 <Package className="w-3.5 h-3.5" />
-                <span>Download ZIP (Placeholder)</span>
+                <span>Copy Folder Tree</span>
               </button>
             </div>
           </div>
